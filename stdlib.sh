@@ -352,11 +352,13 @@ source_env() {
     log_status "loading $(user_rel_path "$(expand_path "$rcpath")")"
     # shellcheck disable=SC1090
     . "./$rcpath_base"
+    ret=$?
   else
     log_status "referenced $rcfile does not exist"
   fi
   popd >/dev/null || return 1
   popd >/dev/null || return 1
+  return "$ret"
 }
 
 # Usage: source_env_if_exists <filename>

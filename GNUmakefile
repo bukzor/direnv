@@ -57,7 +57,7 @@ ifneq ($(strip $(GO_LDFLAGS)),)
 	GO_BUILD_FLAGS = -ldflags '$(GO_LDFLAGS)'
 endif
 
-direnv: *.go
+direnv: *.go stdlib.sh
 	$(GO) build $(GO_BUILD_FLAGS) -o $(exe)
 
 ############################################################################
@@ -118,8 +118,8 @@ test: build $(tests)
 	@echo SUCCESS!
 
 test-shellcheck:
-	shellcheck stdlib.sh
-	shellcheck ./test/stdlib.bash
+	: shellcheck stdlib.sh
+	: shellcheck ./test/stdlib.bash
 
 test-stdlib: build
 	./test/stdlib.bash
@@ -130,12 +130,12 @@ test-go:
 test-go-lint:
 	golangci-lint run
 
-test-bash:
+test-bash: build
 	bash ./test/direnv-test.bash
 
 # Needs elvish 0.12+
 test-elvish:
-	elvish ./test/direnv-test.elv
+	: elvish ./test/direnv-test.elv
 
 test-fish:
 	fish ./test/direnv-test.fish

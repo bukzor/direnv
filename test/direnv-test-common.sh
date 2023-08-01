@@ -30,7 +30,10 @@ has() {
 }
 
 direnv_eval() {
-  eval "$(direnv export "$TARGET_SHELL")"
+  src="$(direnv export "$TARGET_SHELL")"
+  exit_status="$?"
+  eval "$src"
+  return "$exit_status"
 }
 
 test_start() {
@@ -165,6 +168,14 @@ test_start "in-envrc"
   ./test-in-envrc
   es=$?
   set -e
+  test_eq "$es" "1"
+test_stop
+
+test_start "source-wrong-parent"
+  # there should be a detectible failure
+  cd sub/dir
+  direnv allow
+  direnv_eval || exit_status=$?
   test_eq "$es" "1"
 test_stop
 
